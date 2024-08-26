@@ -1,0 +1,15 @@
+#file: noinspection YAMLSchemaValidation
+version: '3'
+
+tasks:
+  c1-deploy-local:
+    cmds:
+      - sam build -u -t template.yaml --skip-pull-image
+      - sam local invoke C1LambdaFunction --event events/no_data.json
+  c1-deploy:
+    cmds:
+      - sam build -t template.yaml
+      - sam deploy --no-confirm-changeset
+  behave:
+    cmds:
+      - behave

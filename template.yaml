@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for Lambda Function Deployment
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 128
+
+Resources:
+  C1LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./  # Changed to point to the api directory
+      Handler: api/app.lambda_handler  # Changed to match the CodeUri
+      Runtime: python3.11
+      Environment:
+        Variables:
+          ENV: dev
+          PYTHONPATH: /var/task
+      Events:
+        HealthCheck:
+          Type: Api
+          Properties:
+            Path: /health
+            Method: get
+        MissingRates:
+          Type: Api
+          Properties:
+            Path: /missingRates
+            Method: post
+        ServiceUnavailable:
+          Type: Api
+          Properties:
+            Path: /serviceUnavaliable
+            Method: post
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+Outputs:
+  C1LambdaFunction:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt C1LambdaFunction.Arn
+  C1LambdaFunctionIamRole:
+    Description: "Implicit IAM Role created for Lambda function"
+    Value: !GetAtt C1LambdaFunctionRole.Arn  # Changed to reference the role ARN
