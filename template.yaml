@@ -8,16 +8,28 @@ Globals:
     MemorySize: 128
 
 Resources:
+  SealightsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: sealights_layer
+      Description: Layer for managing code coverage
+      ContentUri: sealights_layer/
+      CompatibleRuntimes:
+        - python3.11
   C1LambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./  # Changed to point to the api directory
-      Handler: api/app.lambda_handler  # Changed to match the CodeUri
+      Handler: api.runner.app.lambda_handler  # Changed to match the CodeUri
       Runtime: python3.11
+      Layers:
+        - !Ref SealightsLayer
       Environment:
         Variables:
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/setup
           ENV: dev
-          PYTHONPATH: /var/task
+          SL_DEBUG: true
+#          PYTHONPATH: /var/task
       Events:
         HealthCheck:
           Type: Api

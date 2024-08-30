@@ -13,3 +13,13 @@ tasks:
   behave:
     cmds:
       - behave
+  bsid:
+    cmds:
+      - sl-python config --appname c1-lambda --tokenfile ./sltoken.txt --exclude "*tests*,*venv*,*sealights_layer*,*dynatrace_python_agent*,*sl*"
+  scan:
+    cmds:
+      - sl-python scan --buildsessionidfile ./buildSessionId.txt --tokenfile ./sltoken.txt
+
+  configlambda:
+    cmds:
+      - sl-python configlambda --slconfigpaths "./api" --collectorurl "https://a07a-46-120-32-95.ngrok-free.app" --exportlayerpath "./" -
